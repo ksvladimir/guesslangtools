@@ -13,6 +13,7 @@ from typing import (
 
 import pandas as pd
 import requests
+import time
 
 
 LOGGER = logging.getLogger(__name__)
@@ -152,7 +153,14 @@ def _remove_from_cache(path: Path) -> None:
 def download_file(url: str, destination: Path) -> Tuple[bool, int]:
     """Download a file."""
 
-    response = requests.get(url, stream=True, timeout=TIMEOUT)
+    while True:
+        response = requests.get(url, stream=True, timeout=TIMEOUT)
+        if response.status_code == 429:
+            LOGGER.warning('Got rate limited; waiting 1 second: %s', url)
+            time.sleep(1)
+        else:
+            break
+
     if not response.ok:
         LOGGER.warning('Cannot download %s: %s', url, response.status_code)
         return False, response.status_code
