@@ -112,6 +112,9 @@ def _download_repository(item: Dict[str, str]) -> Dict[str, str]:
     if not path.exists():
         LOGGER.debug('Downloading %s', url)
         ok, status = download_file(url, path)
+        if status == 404 and url.endswith('master.zip'):
+            url = url[:len(url) - len('master.zip')] + 'main.zip'
+            ok, status = download_file(url, path)
         if status in (404, 451, -2):
             path.write_text('')
         if not ok:
