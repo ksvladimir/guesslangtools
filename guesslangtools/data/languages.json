@@ -10,7 +10,7 @@
   "HTML": ["html"],
   "Haskell": ["hs", "lhs"],
   "Java": ["java"],
-  "JavaScript": ["js", "es6"],
+  "JavaScript": ["js", "es6", "jsx"],
   "Jupyter Notebook": ["ipynb"],
   "Lua": ["lua"],
   "Markdown": ["md"],
@@ -28,5 +28,9 @@
   "Shell": ["sh"],
   "Swift": ["swift"],
   "TeX": ["tex"],
-  "TypeScript": ["ts", "tsx"]
+  "TypeScript": ["ts", "tsx"],
+
+  "CSV": ["csv", "tsv"],
+  "JSON": ["json"],
+  "YAML": ["yaml"]
 }

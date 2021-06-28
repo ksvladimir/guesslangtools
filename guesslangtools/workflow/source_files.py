@@ -235,7 +235,11 @@ def split() -> None:
     test_ratio = max(test_ratio, MIN_SPLIT_RATIO)
 
     repositories = {}
+    no_repo_languages = ['CSV', 'JSON', 'YAML']
     for language in Config.languages:
+        if language in no_repo_languages:
+            continue
+
         by_language = repo[repo['repository_language'] == language]
         total = len(by_language)
         if total < 3:
@@ -343,14 +347,21 @@ def _choose_files_to_extract(df: pd.DataFrame) -> pd.DataFrame:
 
     for lang in Config.languages:
         mask_lang = df['language'] == lang
+        if lang == 'JSON':
+            # The following files are too repetitive, ignore them
+            mask_filename = ~df['filename'].str.contains(
+                'package\\.json$|package-lock\\.json$|Contents\\.json',
+                regex=True)
+        else:
+            mask_filename = True
 
         for usage, nb_files in usage_info.items():
             mask_usage = df['usage'] == usage
 
-            nb_extracted = len(df[mask_lang & mask_usage & mask_extracted])
+            nb_extracted = len(df[mask_lang & mask_usage & mask_filename & mask_extracted])
             nb_files_to_keep = max(nb_files-nb_extracted, 0)
 
-            pending = df[mask_lang & mask_usage & mask_pending]
+            pending = df[mask_lang & mask_usage & mask_filename & mask_pending]
             kept = pending[:nb_files_to_keep]
             files.append(kept)
 
