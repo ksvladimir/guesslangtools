@@ -41,7 +41,7 @@ class Status(Enum):
 
 
 # (re-)Generates File.AVAILABLE_FILES
-@cached(File.FILES_SPLIT_BY_USAGE)
+@cached(File.AVAILABLE_FILES)
 def list_all() -> None:
     LOGGER.info('List source files from repositories')
     LOGGER.info('This operation might take few minutes...')
